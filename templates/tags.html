@@ -1,0 +1,17 @@
+<form autocomplete="off">
+    <p class="notes">The fields are exclusive, it will look for pictures where all filters apply.</p>
+    <p class="notes">Database is {{size}} files long.</p>
+<fieldset class="tags-group">
+    <legend>Tags</legend>
+    <ol>
+        {{#each tags}}
+        <li>
+            <input type="checkbox" name="{{@key}}" value="{{@key}}" {{#if this}}checked{{/if}}>{{@key}}
+        </li>
+        {{/each}}
+    </ol>
+</fieldset>
+<button type="submit" name="submit">
+    <i class="fas fa-check"></i>Update
+</button>
+</form>

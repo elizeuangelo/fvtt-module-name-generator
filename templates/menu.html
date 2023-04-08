@@ -1,0 +1,113 @@
+<form autocomplete="off">
+
+    <!-- Details Tab -->
+    <h3 class="form-header"><i class="fas fa-user"></i> Character Details</h3>
+    {{#if isTemplate}}
+    <p class="notes">Template data. This character data is derived from another.</p>
+    {{else }}
+    <p class="notes">New character.</p>
+    {{/if}}
+
+    <div class="form-group">
+        <label>Name Generator</label>
+        <div class="form-fields">
+            <select id="generator" name="gridType" data-dtype="Number">
+                {{ selectOptionsNoEscape indexes.names selected=selection.names }}
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Name</label>
+        <div id="names" class="form-fields">
+            <div id="name1">
+                <label class="checkbox">
+                    <input class="lock-btn hide" type="checkbox" for="name1" tabindex="-1" {{checked locks.name1}}/>
+                    <span class="fas lock"></span>
+                </label>
+                <input type="text" name="name1" placeholder="Name" value="{{name1}}"/>
+            </div>
+            <div id="name2">
+                <label class="checkbox">
+                    <input class="lock-btn hide" type="checkbox" for="name2" tabindex="-1" {{checked locks.name2}}/>
+                    <span class="fas lock"></span>
+                </label>
+                <input type="text" name="name2" placeholder="Surname" value="{{name2}}"/>
+            </div>
+            <div id="name3" {{#unless name3}}class="hide"{{/unless}}>
+                <label class="checkbox">
+                    <input class="lock-btn hide" type="checkbox" for="name3" tabindex="-1" {{checked locks.name3}}/>
+                    <span class="fas lock"></span>
+                </label>
+                <input type="text" name="name3" placeholder="Surname" value="{{name3}}"/>
+            </div>
+
+        </div>
+    </div>
+    <p id="explanation" class="notes">The first name means ow shit! I got hit again!</p>
+
+    <div class="picture">
+        <img class="file-picker2" data-type="image" data-target="portrait" width="100" height="100" title="Portrait" {{#if portrait}}src="{{portrait}}"{{else}}src="icons/svg/circle.svg"{{/if}}>
+    </div>
+    
+    <div class="form-group">
+        <label>Portrait</label>
+        <div class="form-fields">
+            <label class="checkbox">
+                <input class="lock-btn hide" type="checkbox" for="portrait" tabindex="-1" {{checked locks.portrait}}/>
+                <span class="fas lock"></span>
+            </label>
+            <input type="text" name="portrait" value="{{portrait}}"/>
+            <button type="button" class="file-picker2" data-type="image" data-target="portrait" title="Browse Files" tabindex="-1">
+                <i class="fas fa-file-import fa-fw"></i>
+            </button>
+            <button id="portrait-filter" type="button" tabindex="-1">
+                <i class="fas fa-box-open"></i>
+            </button>
+        </div>
+    </div>
+
+    {{#if hasTypes}}
+    <div class="form-group">
+        <label>{{localize "Type"}}</label>
+        <div class="form-fields">
+            <select name="type" {{#if isTemplate}}disabled{{/if}}>
+                {{selectOptions types selected=type}}
+            </select>
+        </div>
+    </div>
+    {{/if}}
+
+    {{#if hasFolders}}
+    <div class="form-group">
+        <label>{{ localize "DOCUMENT.Folder" }}</label>
+        <div class="form-fields">
+            <select name="folder">
+                {{#select folder}}
+                <option value=""></option>
+                {{#each folders}}
+                <option value="{{ this.id }}">{{ this.name }}</option>
+                {{/each}}
+                {{/select}}
+            </select>
+        </div>
+    </div>
+    {{/if}}
+
+    {{#if isTemplate}}
+    <div class="form-group">
+        <label>Update names</label>
+        <input type="checkbox" name="update-names">
+        <p class="notes">Updates all identified names in character data for the new character name.</p>
+    </div>
+    {{/if}}
+
+    <button id="randomizer" type="button" tabindex="-1">
+        <i class="fas fa-dice-d20"></i>
+    </button>
+
+    <!-- Form Submission -->
+    <button id="create" type="button">
+        <i class="fas fa-users-cog"></i>Create
+    </button>
+</form>
