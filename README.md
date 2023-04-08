@@ -12,9 +12,9 @@ A lightweight version of the famous [**NPC Generator for 5e**](https://forge-vtt
 
 ## How to Use
 
--   [Generate a new character](#generating-new-characters-🦱)
--   [Reskin a generic character](#reskining-a-character-🧑‍🦱)
--   [Portrait Generation](#portraits-👁️‍🗨️)
+-   [Generate a new character](#generating-new-characters-)
+-   [Reskin a generic character](#reskining-a-character-)
+-   [Portrait Generation](#portraits-)
 
 ### Generating new Characters 🦱
 
@@ -30,7 +30,7 @@ You can also reskin a generic character, changing its name and/or portrait. Opti
 ![reskin](/assets/imgs/jpg/3.jpg)
 ![reskin-application](/assets/imgs/jpg/4.jpg)
 
-### Portraits 👁️‍🗨️
+### Portraits 🖼
 
 To configure portrait generation you need to create a folder like the one found in `name-generator/imgs/portraits`. From there, enter the module configuration and select the folder in the `Portrait Directory` setting.
 
