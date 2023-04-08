@@ -12,9 +12,9 @@ A lightweight version of the famous [**NPC Generator for 5e**](https://forge-vtt
 
 ## How to Use
 
--   [Generate a new character](#generating-new-characters)
--   [Reskin a generic character](#reskining-a-character)
--   [Portrait Generation](#portraits)
+-   [Generate a new character](#generating-new-characters-🦱)
+-   [Reskin a generic character](#reskining-a-character-🧑‍🦱)
+-   [Portrait Generation](#portraits-👁️‍🗨️)
 
 ### Generating new Characters 🦱
 

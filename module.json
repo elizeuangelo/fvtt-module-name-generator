@@ -13,8 +13,7 @@
 	"styles": ["style.css"],
 	"compatibility": {
 		"minimum": "10",
-		"verified": "10.291",
-		"maximum": "10"
+		"verified": "10.291"
 	},
 	"url": "https://github.com/elizeuangelo/fvtt-module-name-generator",
 	"manifest": "https://github.com/elizeuangelo/fvtt-module-name-generator/releases/download/latest/module.json",
