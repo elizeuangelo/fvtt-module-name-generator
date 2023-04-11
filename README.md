@@ -43,7 +43,6 @@ All images in the directory should have their names formatted as the examples in
 -   All names should be in lower-case;
 -   An underline (`_`) act as a separator for different tags, you can have as many tags as you want for any picture and might use spaces as well;
 -   The tags from the entire folder becomes individual filters as well, so adding a new tag to any image also adds a new filter;
--   Jobs and races are automatically matched using their lower-case title;
 -   If no match is found for the applied filters, no image is returned;
 
 ## License
