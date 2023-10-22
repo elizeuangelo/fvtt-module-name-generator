@@ -1,6 +1,5 @@
 import { log } from './utils.js';
 import { TOKENIZER, tokenize } from '../compatibility/tokenizer.js';
-import { ActorData } from '@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs.js';
 
 export type Data = typeof CharDraft.prototype.data;
 interface Config {
