@@ -144,11 +144,16 @@ export class CharacterGenerator extends FormApplication<FormApplicationOptions, 
 			input[0].placeholder = generators[i].label;
 		}
 	}
-	updateSelectBox(name: string, result: string) {
-		const box = this.element.find(`select[name=${name}]+span.npc-info`) as JQuery<HTMLSelectElement>;
-		if (box.length) {
-			box.text(result);
-		}
+	_updateSheetOptions() {
+		//@ts-ignore
+		const el = this.form!.elements['type'];
+		//@ts-ignore
+		const sheet = this.form!.elements['sheet'];
+		sheet.innerHTML = '';
+		const options = Object.values(CONFIG.Actor.sheetClasses[el.value])
+			.map(({ id, label }) => `<option value="${id}">${label}</option>`)
+			.join('');
+		sheet.innerHTML = options;
 	}
 
 	/**
@@ -173,6 +178,9 @@ export class CharacterGenerator extends FormApplication<FormApplicationOptions, 
 		const prev = el.previousElementSibling;
 		if (prev && prev.children[0]?.classList.contains('lock-btn')) {
 			prev.children[0].checked = false;
+		}
+		if (el.name === 'type') {
+			this._updateSheetOptions();
 		}
 		if (el.tagName === 'INPUT' && el.name === 'portrait') {
 			this._onSelectFile(el.value);
@@ -222,7 +230,8 @@ export class CharacterGenerator extends FormApplication<FormApplicationOptions, 
 		const html = this.element,
 			desc: string[] = ['', '', ''];
 		let generators;
-		if (!generators) generators = app._pick_selection(names.references[(html.find('#generator') as JQuery<HTMLInputElement>)[0].value]);
+		if (!generators)
+			generators = app._pick_selection(names.references[(html.find('#generator') as JQuery<HTMLInputElement>)[0].value]);
 		app.updateNameBoxes(generators);
 
 		const explanation = html.find('#explanation');
@@ -289,13 +298,25 @@ export class CharacterGenerator extends FormApplication<FormApplicationOptions, 
 					let match: RegExpExecArray | null = null;
 					if (file_name)
 						while ((match = tag_pattern.exec(file_name[1]))) {
-							if (!tags.includes(match[0]) && !['jpg', 'webp', 'png'].includes(match[0]) && isNaN(+match[0])) tags.push(match[0]);
+							if (!tags.includes(match[0]) && !['jpg', 'webp', 'png'].includes(match[0]) && isNaN(+match[0]))
+								tags.push(match[0]);
 						}
 				});
 				return tags;
 			}
-			const files: string[] = await get_images(user_dir);
-			const tokens: string[] = await get_images(user_dir + '/tokens');
+			let files: string[];
+			try {
+				files = await get_images(user_dir);
+			} catch {
+				warn(`No images found in ${user_dir}`);
+				files = [];
+			}
+			let tokens: string[];
+			try {
+				tokens = await get_images(user_dir + '/tokens');
+			} catch {
+				tokens = [];
+			}
 			// Remove tokens from portraits, because of subfolder search
 			for (const token of tokens) {
 				const idx = files.indexOf(token);
@@ -379,6 +400,7 @@ export class CharacterGenerator extends FormApplication<FormApplicationOptions, 
 			});
 		}
 
+		app._updateSheetOptions();
 		html.find('#randomizer').on('click', randomize);
 		html.find('#create').on('click', () => {
 			const names: string[] = [];
@@ -406,6 +428,7 @@ export class CharacterGenerator extends FormApplication<FormApplicationOptions, 
 			const type = (html.find('select[name=type]') as JQuery<HTMLSelectElement>)[0].value;
 			const folder = (html.find('select[name=folder]') as JQuery<HTMLSelectElement>)[0]?.value;
 			const updateNames = (html.find('input[name=update-names]') as JQuery<HTMLInputElement>)[0]?.checked;
+			const sheet = (html.find('select[name=sheet]') as JQuery<HTMLSelectElement>)[0]?.value;
 
 			CharDraft.create(
 				{
@@ -415,6 +438,7 @@ export class CharacterGenerator extends FormApplication<FormApplicationOptions, 
 					type,
 					folder,
 					updateNames,
+					sheet,
 				},
 				data.data
 			);

@@ -1,4 +1,4 @@
-import { pick, sounds } from './utils.js';
+import { pick, sounds, warn } from './utils.js';
 import { CharDraft } from './chardraft.js';
 import * as names from './names.js';
 import { FILE_PATH, MODULE, TITLE } from './settings.js';
@@ -121,11 +121,14 @@ export class CharacterGenerator extends FormApplication {
             input[0].placeholder = generators[i].label;
         }
     }
-    updateSelectBox(name, result) {
-        const box = this.element.find(`select[name=${name}]+span.npc-info`);
-        if (box.length) {
-            box.text(result);
-        }
+    _updateSheetOptions() {
+        const el = this.form.elements['type'];
+        const sheet = this.form.elements['sheet'];
+        sheet.innerHTML = '';
+        const options = Object.values(CONFIG.Actor.sheetClasses[el.value])
+            .map(({ id, label }) => `<option value="${id}">${label}</option>`)
+            .join('');
+        sheet.innerHTML = options;
     }
     async _updateObject(_event, formData) { }
     _onChangeRange(event) {
@@ -143,6 +146,9 @@ export class CharacterGenerator extends FormApplication {
         const prev = el.previousElementSibling;
         if (prev && prev.children[0]?.classList.contains('lock-btn')) {
             prev.children[0].checked = false;
+        }
+        if (el.name === 'type') {
+            this._updateSheetOptions();
         }
         if (el.tagName === 'INPUT' && el.name === 'portrait') {
             this._onSelectFile(el.value);
@@ -261,8 +267,21 @@ export class CharacterGenerator extends FormApplication {
                 });
                 return tags;
             }
-            const files = await get_images(user_dir);
-            const tokens = await get_images(user_dir + '/tokens');
+            let files;
+            try {
+                files = await get_images(user_dir);
+            }
+            catch {
+                warn(`No images found in ${user_dir}`);
+                files = [];
+            }
+            let tokens;
+            try {
+                tokens = await get_images(user_dir + '/tokens');
+            }
+            catch {
+                tokens = [];
+            }
             for (const token of tokens) {
                 const idx = files.indexOf(token);
                 if (idx !== -1)
@@ -336,6 +355,7 @@ export class CharacterGenerator extends FormApplication {
                 images = res;
             });
         }
+        app._updateSheetOptions();
         html.find('#randomizer').on('click', randomize);
         html.find('#create').on('click', () => {
             const names = [];
@@ -363,6 +383,7 @@ export class CharacterGenerator extends FormApplication {
             const type = html.find('select[name=type]')[0].value;
             const folder = html.find('select[name=folder]')[0]?.value;
             const updateNames = html.find('input[name=update-names]')[0]?.checked;
+            const sheet = html.find('select[name=sheet]')[0]?.value;
             CharDraft.create({
                 names,
                 portrait: data.portrait,
@@ -370,6 +391,7 @@ export class CharacterGenerator extends FormApplication {
                 type,
                 folder,
                 updateNames,
+                sheet,
             }, data.data);
         });
     }

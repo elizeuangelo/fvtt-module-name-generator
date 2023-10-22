@@ -25,6 +25,7 @@ export class CharDraft {
             },
         },
         folder: '',
+        'flags.core.sheetClass': '',
     };
     constructor(data, original = {}) {
         CharDraft.cleanData(original);
@@ -41,6 +42,8 @@ export class CharDraft {
         this.data.prototypeToken.texture.src = data.token || this.data.img;
         this.data.type = data.type;
         this.data.folder = data.folder || this.data.folder;
+        if (data.sheet)
+            this.data['flags.core.sheetClass'] = data.sheet;
     }
     renameCharData(oldName, newName) {
         function renameAll(obj) {
@@ -63,7 +66,10 @@ export class CharDraft {
     async createActor() {
         const actor = (await Actor.create(this.data));
         const tokenEqualPortrait = actor.img === actor.prototypeToken.texture.src;
-        if (tokenEqualPortrait && actor.img !== 'icons/svg/mystery-man.svg' && TOKENIZER() && game.settings.get('name-generator', 'tokenizer'))
+        if (tokenEqualPortrait &&
+            actor.img !== 'icons/svg/mystery-man.svg' &&
+            TOKENIZER() &&
+            game.settings.get('name-generator', 'tokenizer'))
             await tokenize(actor);
         log(`NPC Generated: ${actor.name}`);
         ui.notifications.notify(`Character created! ${actor.name}`);

@@ -10,6 +10,7 @@ interface Config {
 	type: string;
 	folder?: string;
 	updateNames?: boolean;
+	sheet?: string;
 }
 
 /**
@@ -44,6 +45,7 @@ export class CharDraft {
 			},
 		},
 		folder: '',
+		'flags.core.sheetClass': '',
 	};
 
 	constructor(data: Config, original = {}) {
@@ -65,6 +67,7 @@ export class CharDraft {
 
 		this.data.type = data.type;
 		this.data.folder = data.folder || this.data.folder;
+		if (data.sheet) this.data['flags.core.sheetClass'] = data.sheet;
 	}
 
 	/**
@@ -98,7 +101,12 @@ export class CharDraft {
 		const actor = (await Actor.create(this.data as any)) as StoredDocument<Actor> as any;
 
 		const tokenEqualPortrait = actor.img === actor.prototypeToken.texture.src;
-		if (tokenEqualPortrait && actor.img !== 'icons/svg/mystery-man.svg' && TOKENIZER() && game.settings.get('name-generator', 'tokenizer'))
+		if (
+			tokenEqualPortrait &&
+			actor.img !== 'icons/svg/mystery-man.svg' &&
+			TOKENIZER() &&
+			game.settings.get('name-generator', 'tokenizer')
+		)
 			await tokenize(actor);
 		log(`NPC Generated: ${actor.name}`);
 		ui.notifications.notify(`Character created! ${actor.name}`);

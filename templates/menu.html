@@ -78,6 +78,14 @@
     </div>
     {{/if}}
 
+    <div class="form-group">
+        <label>{{localize "Sheet"}}</label>
+        <div class="form-fields">
+            <select name="sheet" {{#if isTemplate}}disabled{{/if}}>
+            </select>
+        </div>
+    </div>
+
     {{#if hasFolders}}
     <div class="form-group">
         <label>{{ localize "DOCUMENT.Folder" }}</label>
